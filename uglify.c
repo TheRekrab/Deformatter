@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define LINE_SIZE 512
+
 int main(int argc, const char** argv) {
 	if (argc < 2) {
 		printf("USAGE: %s [FILENAME] [NEW FILENAME]\n\nIf no new name is provided, the original file will be overwritten.\n", argv[0]);
@@ -11,18 +13,24 @@ int main(int argc, const char** argv) {
 
 	// Step one: loop through the code:
 	FILE* fptr = fopen(argv[1], "r");
-	
+		
 	if (fptr == NULL) {
 		printf("ERROR: %s does not exist. Exiting...\n", argv[1]);
 		return EXIT_SUCCESS;
 	}
-	char *data = malloc(4096);
-	char tmp[512];
-	while (fgets(tmp, 512, fptr)) {
+
+	// We need to know the size of the file to know how big the final things should be.
+	
+	fseek(fptr, 0L, SEEK_END);
+	int size = ftell(fptr);
+
+	char *data = malloc(size);
+	char tmp[LINE_SIZE];
+	while (fgets(tmp, LINE_SIZE, fptr)) {
 		tmp[strcspn(tmp, "\n")] = 0x00;
 		// Remove starting whitespace:
 		int count = strspn(tmp, "\t");
-		char final[512];
+		char final[LINE_SIZE];
 		if (count != 0) {
 			strcpy(final, &tmp[count]);
 		} else {
