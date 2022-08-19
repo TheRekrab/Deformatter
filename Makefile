@@ -1,13 +1,8 @@
 CFLAGS = -s
 CC = gcc
 
-uglify:uglify.c 
-	$(CC) uglify.c $(CFLAGS) -o uglify
+deformat:deformat.c 
+	$(CC) deformat.c $(CFLAGS) -o deformat
 
-clean: uglify
-	rm uglify
-
-run: uglify
-	@./uglify
-	@rm uglify
-	@# I added the '@'s because then its easier to see what the code is doing, versus what 'make' is doing.
+clean: deformat 
+	rm deformat
